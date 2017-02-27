@@ -4,6 +4,7 @@ uint public defaultCost;
 uint public mainLandCost;
 
 mapping(uint => mapping(uint => address))public properties;
+mapping(uint => mapping(uint => address))public landContent;
 mapping(uint => mapping(uint => bool))public status;
 mapping(uint => mapping(uint => uint))public prices;
 
@@ -38,6 +39,19 @@ function buyLand(uint x,uint y)returns(bool) payable{
    if(prices[x][y]>0)if(msg.value>=prices[x][y]){properties[x][y]=msg.sender;status[x][y]=true;}
    if(prices[x][y]==0)if(msg.value>=defaultCost)properties[x][y]=msg.sender;
    }
+}
+
+function setLand(uint x,uint y,address entity)returns(bool){
+if(status[x][y]){
+if(properties[x][y]==msg.sender){
+landContent[x][y]=entity;
+}else{throw;}
+}else{
+if(owner==msg.sender){
+landContent[x][y]=entity;
+}else{throw;}
+}
+return true;
 }
 
 function buyMainLand()returns(bool) payable{
